@@ -10,9 +10,26 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.devmedia.springrest.domain.DetalheErro;
+import br.com.devmedia.springrest.exceprion.NaoExisteDaoException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	@ExceptionHandler({NaoExisteDaoException.class})
+	public ResponseEntity<Object> naoExisteDaoException(RuntimeException ex, WebRequest request){
+		return handleExceptionInternal(
+				ex, 
+				DetalheErro.builder()
+				.addDetalhe("Recurso não encontrado na base de dados!")
+				.addErro(ex.getMessage())
+				.addStatus(HttpStatus.NOT_FOUND)
+				.addHttpMethod(getHttpMethod(request))
+				.addPath(getPath(request))
+				.build(),
+				new HttpHeaders(),
+				HttpStatus.NOT_FOUND,
+				request);
+	}
 	
 	@ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
 	public ResponseEntity<Object> serverException(RuntimeException ex, WebRequest request){

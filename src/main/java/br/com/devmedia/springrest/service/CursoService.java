@@ -22,6 +22,7 @@ public class CursoService {
 	}
 	
 	public void update(Curso curso, Long id) {
+		dao.findById(id);
 		curso.setId(id);
 		dao.update(curso);
 	}
