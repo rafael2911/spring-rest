@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.devmedia.springrest.dao.CursoDao;
 import br.com.devmedia.springrest.domain.Curso;
+import br.com.devmedia.springrest.exceprion.IdNaoValidoServiceException;
 
 @Service
 @Transactional
@@ -22,17 +23,17 @@ public class CursoService {
 	}
 	
 	public void update(Curso curso, Long id) {
-		dao.findById(id);
-		curso.setId(id);
+		dao.findById(idValido(id));
+		curso.setId(idValido(id));
 		dao.update(curso);
 	}
 	
 	public void delete(Long id) {
-		dao.delete(id);
+		dao.delete(idValido(id));
 	}
 	
 	public Curso findById(Long id) {
-		return dao.findById(id);
+		return dao.findById(idValido(id));
 	}
 	
 	public List<Curso> findAll(){
@@ -40,9 +41,17 @@ public class CursoService {
 	}
 	
 	public Curso updateDataInicio(Long id, Date dataInicio) {
-		Curso curso = dao.findById(id);
+		Curso curso = dao.findById(idValido(id));
 		curso.setDataInicio(dataInicio);
 		return curso;
+	}
+	
+	private Long idValido(Long id) {
+		if(id<=0) {
+			throw new IdNaoValidoServiceException("Valor do campo id está invalido. Deve ser uma valor inteiro maior que zero!");
+		}
+		
+		return id;
 	}
 	
 }

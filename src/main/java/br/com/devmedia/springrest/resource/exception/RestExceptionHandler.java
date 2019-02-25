@@ -1,5 +1,7 @@
 package br.com.devmedia.springrest.resource.exception;
 
+import org.hibernate.PropertyValueException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +12,58 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.devmedia.springrest.domain.DetalheErro;
+import br.com.devmedia.springrest.exceprion.IdNaoValidoServiceException;
 import br.com.devmedia.springrest.exceprion.NaoExisteDaoException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	@ExceptionHandler({IdNaoValidoServiceException.class})
+	public ResponseEntity<Object> constraintViolada(IdNaoValidoServiceException ex, WebRequest request){
+		return handleExceptionInternal(
+				ex, 
+				DetalheErro.builder()
+				.addErro(ex.getMessage())
+				.addStatus(HttpStatus.BAD_REQUEST)
+				.addHttpMethod(getHttpMethod(request))
+				.addPath(getPath(request))
+				.build(),
+				new HttpHeaders(),
+				HttpStatus.BAD_REQUEST,
+				request);
+	}
+	
+	@ExceptionHandler({ConstraintViolationException.class})
+	public ResponseEntity<Object> constraintViolada(ConstraintViolationException ex, WebRequest request){
+		return handleExceptionInternal(
+				ex, 
+				DetalheErro.builder()
+				.addDetalhe("Constraint violado: " + ex.getConstraintName())
+				.addErro(ex.getMessage())
+				.addStatus(HttpStatus.CONFLICT)
+				.addHttpMethod(getHttpMethod(request))
+				.addPath(getPath(request))
+				.build(),
+				new HttpHeaders(),
+				HttpStatus.CONFLICT,
+				request);
+	}
+	
+	@ExceptionHandler({PropertyValueException.class})
+	public ResponseEntity<Object> propriedadeNula(PropertyValueException ex, WebRequest request){
+		return handleExceptionInternal(
+				ex, 
+				DetalheErro.builder()
+				.addDetalhe("O atributo " + ex.getPropertyName() + " não pode ser nulo!")
+				.addErro(ex.getMessage())
+				.addStatus(HttpStatus.BAD_REQUEST)
+				.addHttpMethod(getHttpMethod(request))
+				.addPath(getPath(request))
+				.build(),
+				new HttpHeaders(),
+				HttpStatus.BAD_REQUEST,
+				request);
+	}
 	
 	@ExceptionHandler({NaoExisteDaoException.class})
 	public ResponseEntity<Object> naoExisteDaoException(RuntimeException ex, WebRequest request){
