@@ -48,6 +48,10 @@ public class CursoService {
 		return dao.findAll();
 	}
 	
+	public List<Curso> findAllSemAulas(){
+		return dao.findAllSemAulas();
+	}
+	
 	public Curso updateDataInicio(Long id, Date dataInicio) {
 		Curso curso = dao.findById(idValido(id));
 		curso.setDataInicio(dataInicio);

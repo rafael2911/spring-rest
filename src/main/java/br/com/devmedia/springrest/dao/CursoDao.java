@@ -48,4 +48,8 @@ public class CursoDao {
 		return manager.createQuery("from Curso c", Curso.class).getResultList();
 	}
 	
+	public List<Curso> findAllSemAulas(){
+		return manager.createQuery("select new Curso(c.id, c.titulo, c.cargaHoraria, c.dataInicio) from Curso c", Curso.class).getResultList();
+	}
+	
 }

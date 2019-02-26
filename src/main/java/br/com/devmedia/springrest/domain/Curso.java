@@ -18,6 +18,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
 @Table(
@@ -45,10 +46,21 @@ public class Curso {
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date dataInicio;
 	
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@OneToMany(mappedBy="curso", cascade=CascadeType.ALL)
 	@JsonIgnoreProperties({"curso"})
 	private List<VideoAula> aulas;
-	
+		
+	public Curso() {
+		super();
+	}
+	public Curso(Long id, String titulo, CargaHoraria cargaHoraria, Date dataInicio) {
+		super();
+		this.id = id;
+		this.titulo = titulo;
+		this.cargaHoraria = cargaHoraria;
+		this.dataInicio = dataInicio;
+	}
 	public Long getId() {
 		return id;
 	}
