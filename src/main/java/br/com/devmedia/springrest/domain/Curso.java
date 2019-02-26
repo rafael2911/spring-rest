@@ -1,7 +1,10 @@
 package br.com.devmedia.springrest.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,9 +13,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(
@@ -40,6 +45,10 @@ public class Curso {
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date dataInicio;
 	
+	@OneToMany(mappedBy="curso", cascade=CascadeType.ALL)
+	@JsonIgnoreProperties({"curso"})
+	private List<VideoAula> aulas;
+	
 	public Long getId() {
 		return id;
 	}
@@ -63,6 +72,21 @@ public class Curso {
 	}
 	public void setDataInicio(Date dataInicio) {
 		this.dataInicio = dataInicio;
+	}
+	public List<VideoAula> getAulas() {
+		return aulas;
+	}
+	public void setAulas(List<VideoAula> aulas) {
+		this.aulas = aulas;
+	}
+	public void addVideoAula(VideoAula videoAula) {
+		
+		if(this.aulas == null) {
+			this.aulas = new ArrayList<>();
+		}
+		
+		videoAula.setCurso(this);
+		
 	}
 	@Override
 	public String toString() {

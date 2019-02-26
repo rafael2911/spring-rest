@@ -20,6 +20,14 @@ public class CursoService {
 	
 	public void save(Curso curso) {
 		dao.save(curso);
+		
+		if(curso.getAulas() != null) {
+			curso.getAulas()
+				.parallelStream()
+				.forEach(curso::addVideoAula);
+		}
+		
+		curso.getAulas().forEach(aula -> System.out.println(aula));
 	}
 	
 	public void update(Curso curso, Long id) {
