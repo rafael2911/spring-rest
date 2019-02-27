@@ -9,9 +9,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 @Entity
 @Table(name="videoaulas")
-public class VideoAula {
+public class Videoaula {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -28,7 +32,21 @@ public class VideoAula {
 	
 	@ManyToOne
 	@JoinColumn(name="id_curso_fk")
+	@JsonIgnoreProperties({"aulas", "cargaHoraria", "dataInicio"})
+	@JsonInclude(value=Include.NON_NULL)
 	private Curso curso;
+
+	public Videoaula() {
+		super();
+	}
+
+	public Videoaula(Long id, String titulo, String descricao, int numero) {
+		super();
+		this.id = id;
+		this.titulo = titulo;
+		this.descricao = descricao;
+		this.numero = numero;
+	}
 
 	public Curso getCurso() {
 		return curso;

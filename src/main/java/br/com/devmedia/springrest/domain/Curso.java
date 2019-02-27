@@ -49,7 +49,7 @@ public class Curso {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	@OneToMany(mappedBy="curso", cascade=CascadeType.ALL)
 	@JsonIgnoreProperties({"curso"})
-	private List<VideoAula> aulas;
+	private List<Videoaula> aulas;
 		
 	public Curso() {
 		super();
@@ -85,13 +85,13 @@ public class Curso {
 	public void setDataInicio(Date dataInicio) {
 		this.dataInicio = dataInicio;
 	}
-	public List<VideoAula> getAulas() {
+	public List<Videoaula> getAulas() {
 		return aulas;
 	}
-	public void setAulas(List<VideoAula> aulas) {
+	public void setAulas(List<Videoaula> aulas) {
 		this.aulas = aulas;
 	}
-	public void addVideoAula(VideoAula videoAula) {
+	public void addVideoAula(Videoaula videoAula) {
 		
 		if(this.aulas == null) {
 			this.aulas = new ArrayList<>();
